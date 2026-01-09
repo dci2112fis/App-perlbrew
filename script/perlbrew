@@ -355,8 +355,9 @@ Usage: perlbrew off
 Temporarily disable perlbrew in the current shell. Effectively re-enables the
 default system Perl, whatever that is.
 
-This command works only if you add the statement of `source $PERLBREW_ROOT/etc/bashrc`
-in your shell initialization (bashrc / zshrc).
+This command works only if you add the following statements in your shell initialization:
+   bash/zsh: source $PERLBREW_ROOT/etc/bashrc
+   ksh: . $PERLBREW_ROOT/etc/kshrc
 
 =head1 COMMAND: SWITCH-OFF
 
@@ -446,7 +447,7 @@ Usage: perlbrew env [ <name> ]
 Low-level command. Invoke this command to see the list of environment
 variables that are set by C<perlbrew> itself for shell integration.
 
-The output is something similar to this (if your shell is bash/zsh):
+The output is something similar to this (if your shell is bash/zsh/ksh):
 
     export PERLBREW_ROOT=/Users/gugod/perl5/perlbrew
     export PERLBREW_VERSION=0.31

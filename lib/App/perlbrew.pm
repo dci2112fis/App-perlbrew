@@ -373,6 +373,12 @@ sub is_shell_csh {
     return 0;
 }
 
+sub is_shell_ksh {
+    my ($self) = @_;
+    return 1 if $self->env('SHELL') =~ /ksh/;
+    return 0;
+}
+
 # Entry point method: handles all the arguments
 # and dispatches to an appropriate internal
 # method to execute the corresponding command.
@@ -942,6 +948,7 @@ sub run_command_init {
         ["csh_reinit",               "CSH_REINIT_CONTENT"],
         ["csh_wrapper",              "CSH_WRAPPER_CONTENT"],
         ["csh_set_path",             "CSH_SET_PATH_CONTENT"],
+        ["kshrc",                    "KSHRC_CONTENT"],
         ["perlbrew-completion.bash", "BASH_COMPLETION_CONTENT"],
         ["perlbrew.fish",            "PERLBREW_FISH_CONTENT"],
         )
@@ -990,6 +997,15 @@ sub run_command_init {
                     .profile
                 )
             ) || ".zshenv";
+        }
+        elsif ( $shell =~ m/ksh/ ) {
+            $code     = "source $root_dir/etc/kshrc";
+            $yourshrc = $self->_firstrcfile(
+                qw(
+                    .kshrc
+                    .profile
+                )
+            ) || ".kshrc";
         }
         elsif ( $shell =~ m/fish/ ) {
             $code     = ". $root_dir/etc/perlbrew.fish";
@@ -2507,6 +2523,10 @@ sub run_command_display_cshrc {
     print CSHRC_CONTENT();
 }
 
+sub run_command_display_kshrc {
+    print KSHRC_CONTENT();
+}
+
 sub run_command_display_installation_failure_message {
     my ($self) = @_;
 }
@@ -3405,6 +3425,12 @@ source "$PERLBREW_ROOT/etc/csh_set_path"
 alias perlbrew 'source "$PERLBREW_ROOT/etc/csh_wrapper"'
 CSHRC
 
+}
+
+sub KSHRC_CONTENT {
+    my $kshrc_content = BASH_CONTENT();
+    $kshrc_content =~ s/^\s*local\s+/typeset /gm;
+    return $kshrc_content;
 }
 
 sub append_log {
