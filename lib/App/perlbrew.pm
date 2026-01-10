@@ -3428,7 +3428,7 @@ CSHRC
 }
 
 sub KSHRC_CONTENT {
-    my $kshrc_content = BASH_CONTENT();
+    my $kshrc_content = BASHRC_CONTENT();
     $kshrc_content =~ s/^\s*local\s+/typeset /gm;
     return $kshrc_content;
 }
