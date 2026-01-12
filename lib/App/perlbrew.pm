@@ -3429,7 +3429,21 @@ CSHRC
 
 sub KSHRC_CONTENT {
     my $kshrc_content = BASHRC_CONTENT();
-    $kshrc_content =~ s/^\s*local\s+/typeset /gm;
+    $kshrc_content =~ s/\blocal\b/typeset/gm;
+
+    $kshrc_content =~ s!__perlbrew_purify () \{}.*?\}!__perlbrew_purify () {
+        typeset path patharray outsep IFS
+        IFS=:
+        set -A patharray \$(print "\$1")
+        for path in "\${patharray[\@]}" ; do
+            case "\$path" in
+            (*"\$PERLBREW_HOME"*) ;;
+            (*"\$PERLBREW_ROOT"*) ;;
+            (*) printf '%s' "\${outsep:-}\$path" ; outsep=: ;;
+            esac
+        done
+        \}!gsx;
+
     return $kshrc_content;
 }
 
